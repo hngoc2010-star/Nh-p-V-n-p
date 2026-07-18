@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Plywood Import Cost</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Plywood Cost">
+    
+    <style>
+        :root {
+            --bg-color: #f2f2f7;
+            --card-bg: #ffffff;
+            --text-color: #000000;
+            --text-secondary: #8e8e93;
+            --border-color: #e5e5ea;
+            --accent-color: #007aff;
+            --danger-color: #ff3b30;
+            --safe-area-top: env(safe-area-inset-top, 0px);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #000000;
+                --card-bg: #1c1c1e;
+                --text-color: #ffffff;
+                --text-secondary: #8e8e93;
+                --border-color: #38383a;
+                --accent-color: #0a84ff;
+                --danger-color: #ff453a;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+
+        /* Sticky Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--bg-color);
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s ease-in-out;
+            padding-top: calc(var(--safe-area-top) + 10px);
+            padding-bottom: 10px;
+        }
+
+        header.scrolled {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            transition: font-size 0.2s;
+        }
+
+        header.scrolled h1 {
+            font-size: 18px;
+        }
+
+        .header-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-ios {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-ios.secondary {
+            background-color: var(--border-color);
+            color: var(--accent-color);
+        }
+
+        /* Container */
+        .container {
+            padding: 0 16px;
+        }
+
+        /* Segmented Control */
+        .segmented-control {
+            display: flex;
+            background-color: var(--border-color);
+            padding: 2px;
+            border-radius: 9px;
+            margin: 12px 0;
+        }
+
+        .segmented-control label {
+            flex: 1;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .segmented-control input {
+            display: none;
+        }
+
+        .segmented-control input:checked + label {
+            background-color: var(--card-bg);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            font-weight: 600;
+        }
+
+        /* Card iOS Style */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: var(--accent-color);
+        }
+
+        /* Form Row */
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .form-row:last-child {
+            border-bottom: none;
+        }
+
+        .form-row label {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            width: 50%;
+        }
+
+        select, input.num-input {
+            width: 100%;
+            text-align: right;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            color: var(--text-color);
+            padding: 4px 0;
+            outline: none;
+        }
+
+        select {
+            direction: rtl;
+            font-weight: 500;
+        }
+
+        .error-msg {
+            color: var(--danger-color);
+            font-size: 11px;
+            margin-top: 2px;
+            display: none;
+            text-align: right;
+        }
+
+        /* Output Row */
+        .out-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 15px;
+        }
+
+        .out-row.total {
+            border-top: 1px solid var(--border-color);
+            margin-top: 8px;
+            padding-top: 12px;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .out-row.total-sheet {
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <header id="appHeader">
+        <div class="header-content">
+            <h1 id="appTitle">Plywood Import</h1>
+            <div class="header-btns">
+                <button class="btn-ios secondary" onclick="resetForm()">Reset</button>
+                <button class="btn-ios" onclick="copySummary()">Copy</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Number of Products -->
+        <div class="segmented-control">
+            <input type="radio" name="numProd" id="p1" value="1" checked onclick="toggleProducts()">
+            <label for="p1">①</label>
+            <input type="radio" name="numProd" id="p2" value="2" onclick="toggleProducts()">
+            <label for="p2">②</label>
+            <input type="radio" name="numProd" id="p3" value="3" onclick="toggleProducts()">
+            <label for="p3">③</label>
+        </div>
+
+        <!-- Dynamic Products Container -->
+        <div id="productsContainer">
+            <!-- Product Cards will be handled by JavaScript loop -->
+        </div>
+
+        <!-- General Costs Card -->
+        <div class="card">
+            <div class="card-title">Chi Phí Chung</div>
+            
+            <div class="form-row">
+                <label>Import Tax</label>
+                <div class="input-wrapper">
+                    <select id="importTax" onchange="calculate()">
+                        <option value="0">0%</option>
+                        <option value="5">5%</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label>VAT</label>
+                <div class="input-wrapper">
+                    <span style="font-size: 16px; font-weight: 500;">8%</span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label>USD Rate (VND)</label>
+                <div class="input-wrapper">
+                    <input type="text" id="usdRate" class="num-input" inputmode="numeric" value="26,300" oninput="handleNumericInput(this)">
+                    <div class="error-msg" id="err-usdRate">Không được để trống</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label>Transportation (VND)</label>
+                <div class="input-wrapper">
+                    <input type="text" id="transCost" class="num-input" inputmode="numeric" value="8,500,000" oninput="handleNumericInput(this)">
+                    <div class="error-msg" id="err-transCost">Không được để trống</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label>Commission (USD)</label>
+                <div class="input-wrapper">
+                    <input type="text" id="commission" class="num-input" inputmode="numeric" value="2,000" oninput="handleNumericInput(this)">
+                    <div class="error-msg" id="err-commission">Không được để trống</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Output Card -->
+        <div class="card" style="margin-bottom: 32px;">
+            <div class="card-title">Kết Quả</div>
+            <div class="out-row"><span>Total Sheets</span><span id="outTotalSheets" class="out-row total-sheet">0</span></div>
+            <div class="out-row"><span>Total CBM</span><span id="outTotalCBM">0.00</span></div>
+            <div class="out-row"><span>DDU Value (USD)</span><span id="outDDUUSD">$0</span></div>
+            <div class="out-row"><span>Import Tax (VND)</span><span id="outTaxVND">0</span></div>
+            <div class="out-row"><span>VAT (VND)</span><span id="outVatVND">0</span></div>
+            <div class="out-row"><span>Transportation (VND)</span><span id="outTransVND">0</span></div>
+            <div class="out-row"><span>Commission (VND)</span><span id="outCommVND">0</span></div>
+            <div class="out-row total"><span>Total Cost</span><span id="outTotalCost" style="color: var(--danger-color);">0 VND</span></div>
+            <div class="out-row" style="font-weight: 600;"><span>Cost / Sheet</span><span id="outCostPerSheet">0 VND</span></div>
+        </div>
+    </div>
+
+    <script>
+        // Render 3 Product cards on load but hide dynamic cards based on control
+        const container = document.getElementById('productsContainer');
+        let html = '';
+        for(let i=1; i<=3; i++) {
+            html += `
+            <div class="card product-card" id="card-p${i}">
+                <div class="card-title">Product ${i}</div>
+                <div class="form-row">
+                    <label>Size</label>
+                    <div class="input-wrapper">
+                        <select id="size-${i}" onchange="calculate()">
+                            <option value="3x6">3 × 6 (0.91m × 1.82m)</option>
+                            <option value="4x8">4 × 8 (1.22m × 2.44m)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>Thickness (mm)</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="thick-${i}" class="num-input" inputmode="decimal" value="18" oninput="handleNumericInput(this)">
+                        <div class="error-msg" id="err-thick-${i}">Phải lớn hơn 0</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>Bundles</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="bundles-${i}" class="num-input" inputmode="numeric" value="10" oninput="handleNumericInput(this)">
+                        <div class="error-msg" id="err-bundles-${i}">Phải lớn hơn 0</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>PCS / Bundle</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="pcs-${i}" class="num-input" inputmode="numeric" value="50" oninput="handleNumericInput(this)">
+                        <div class="error-msg" id="err-pcs-${i}">Phải lớn hơn 0</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>DDU (USD/Sheet)</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="ddu-${i}" class="num-input" inputmode="decimal" value="15.50" oninput="handleNumericInput(this)">
+                        <div class="error-msg" id="err-ddu-${i}">Phải lớn hơn 0</div>
+                    </div>
+                </div>
+            </div>`;
+        }
+        container.innerHTML = html;
+
+        // Sticky Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('appHeader');
+            if (window.scrollY > 20) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Format number to string with commas
+        function formatNumber(num) {
+            if(isNaN(num)) return "0";
+            let parts = num.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        }
+
+        // Parse formatted string back to float
+        function parseNumber(str) {
+            return parseFloat(str.replace(/,/g, '')) || 0;
+        }
+
+        // Handle auto-format and realtime validation on input
+        function handleNumericInput(input) {
+            let id = input.id;
+            let val = input.value.replace(/,/g, '');
+            
+            // Allow decimals for DDU and Thickness
+            if (id.includes('ddu') || id.includes('thick')) {
+                if(val.endsWith('.')) return; // Let user type decimal point
+                let parsed = parseFloat(val);
+                if(!isNaN(parsed)) {
+                    input.value = formatNumber(val);
+                } else {
+                    input.value = val;
+                }
+            } else {
+                // Integer numbers
+                val = val.replace(/\D/g, '');
+                if(val !== '') {
+                    input.value = formatNumber(parseInt(val, 10));
+                } else {
+                    input.value = '';
+                }
+            }
+            validateAndCalculate();
+        }
+
+        function toggleProducts() {
+            const activeCount = parseInt(document.querySelector('input[name="numProd"]:checked').value);
+            for(let i=1; i<=3; i++) {
+                const card = document.getElementById(`card-p${i}`);
+                if(i <= activeCount) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            }
+            validateAndCalculate();
+        }
+
+        // Global results variables for easy copying
+        let globalSummary = {};
+
+        function validateAndCalculate() {
+            let hasError = false;
+            const activeCount = parseInt(document.querySelector('input[name="numProd"]:checked').value);
+            
+            // Check Common Cost
+            ['usdRate', 'transCost', 'commission'].forEach(id => {
+                const input = document.getElementById(id);
+                const err = document.getElementById(`err-${id}`);
+                if(parseNumber(input.value) <= 0) {
+                    err.style.display = 'block';
+                    hasError = true;
+                } else {
+                    err.style.display = 'none';
+                }
+            });
+
+            // Check Active Products
+            for(let i=1; i<=activeCount; i++) {
+                ['thick', 'bundles', 'pcs', 'ddu'].forEach(field => {
+                    const input = document.getElementById(`${field}-${i}`);
+                    const err = document.getElementById(`err-${field}-${i}`);
+                    if(parseNumber(input.value) <= 0) {
+                        err.style.display = 'block';
+                        hasError = true;
+                    } else {
+                        err.style.display = 'none';
+                    }
+                });
+            }
+
+            if(hasError) return;
+            calculate();
+        }
+
+        function calculate() {
+            const activeCount = parseInt(document.querySelector('input[name="numProd"]:checked').value);
+            
+            let totalSheets = 0;
+            let totalCBM = 0;
+            let totalDDUUSD = 0;
+
+            // Get General Costs
+            const taxRate = parseNumber(document.getElementById('importTax').value) / 100;
+            const vatRate = 0.08;
+            const usdRate = parseNumber(document.getElementById('usdRate').value);
+            const transCostVND = parseNumber(document.getElementById('transCost').value);
+            const commUSD = parseNumber(document.getElementById('commission').value);
+
+            for(let i=1; i<=activeCount; i++) {
+                const size = document.getElementById(`size-${i}`).value;
+                const thick = parseNumber(document.getElementById(`thick-${i}`).value) / 1000; // mm to meter
+                const bundles = parseNumber(document.getElementById(`bundles-${i}`).value);
+                const pcs = parseNumber(document.getElementById(`pcs-${i}`).value);
+                const dduSheet = parseNumber(document.getElementById(`ddu-${i}`).value);
+
+                let w = 0.91, l = 1.82; // Default 3x6
+                if(size === '4x8') { w = 1.22; l = 2.44; }
+
+                const sheets = bundles * pcs;
+                const cbm = w * l * thick * sheets;
+                const dduVal = sheets * dduSheet;
+
+                totalSheets += sheets;
+                totalCBM += cbm;
+                totalDDUUSD += dduVal;
+            }
+
+            // Convert and Calculate Costs
+            const dduVND = totalDDUUSD * usdRate;
+            const taxVND = dduVND * taxRate;
+            const vatVND = (dduVND + taxVND) * vatRate;
+            const commVND = commUSD * usdRate;
+            
+            const totalCostVND = dduVND + taxVND + vatVND + transCostVND + commVND;
+            const costPerSheetVND = totalSheets > 0 ? (totalCostVND / totalSheets) : 0;
+
+            // Update UI
+            document.getElementById('outTotalSheets').innerText = formatNumber(totalSheets);
+            document.getElementById('outTotalCBM').innerText = totalCBM.toFixed(2);
+            document.getElementById('outDDUUSD').innerText = '$' + formatNumber(totalDDUUSD.toFixed(2));
+            document.getElementById('outTaxVND').innerText = formatNumber(Math.round(taxVND));
+            document.getElementById('outVatVND').innerText = formatNumber(Math.round(vatVND));
+            document.getElementById('outTransVND').innerText = formatNumber(transCostVND);
+            document.getElementById('outCommVND').innerText = formatNumber(Math.round(commVND));
+            document.getElementById('outTotalCost').innerText = formatNumber(Math.round(totalCostVND)) + " VND";
+            document.getElementById('outCostPerSheet').innerText = formatNumber(Math.round(costPerSheetVND)) + " VND";
+
+            // Save data to global for copy function
+            globalSummary = {
+                sheets: formatNumber(totalSheets),
+                cbm: totalCBM.toFixed(2),
+                totalCost: formatNumber(Math.round(totalCostVND)) + " VND",
+                costPerSheet: formatNumber(Math.round(costPerSheetVND)) + " VND"
+            };
+
+            saveToLocalStorage();
+        }
+
+        function saveToLocalStorage() {
+            const data = {
+                numProd: document.querySelector('input[name="numProd"]:checked').value,
+                tax: document.getElementById('importTax').value,
+                rate: document.getElementById('usdRate').value,
+                trans: document.getElementById('transCost').value,
+                comm: document.getElementById('commission').value,
+                prods: []
+            };
+
+            for(let i=1; i<=3; i++) {
+                data.prods.push({
+                    size: document.getElementById(`size-${i}`).value,
+                    thick: document.getElementById(`thick-${i}`).value,
+                    bundles: document.getElementById(`bundles-${i}`).value,
+                    pcs: document.getElementById(`pcs-${i}`).value,
+                    ddu: document.getElementById(`ddu-${i}`).value
+                });
+            }
+            localStorage.setItem('plywood_calc_data', JSON.stringify(data));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('plywood_calc_data');
+            if(!saved) {
+                toggleProducts();
+                return;
+            }
+            try {
+                const data = JSON.parse(saved);
+                document.querySelector(`input[name="numProd"][value="${data.numProd}"]`).checked = true;
+                document.getElementById('importTax').value = data.tax;
+                document.getElementById('usdRate').value = data.rate;
+                document.getElementById('transCost').value = data.trans;
+                document.getElementById('commission').value = data.comm;
+
+                data.prods.forEach((p, index) => {
+                    let i = index + 1;
+                    if(document.getElementById(`size-${i}`)) {
+                        document.getElementById(`size-${i}`).value = p.size;
+                        document.getElementById(`thick-${i}`).value = p.thick;
+                        document.getElementById(`bundles-${i}`).value = p.bundles;
+                        document.getElementById(`pcs-${i}`).value = p.pcs;
+                        document.getElementById(`ddu-${i}`).value = p.ddu;
+                    }
+                });
+            } catch(e) { console.error(e); }
+            toggleProducts();
+        }
+
+        function resetForm() {
+            localStorage.removeItem('plywood_calc_data');
+            document.getElementById('p1').checked = true;
+            document.getElementById('importTax').value = "0";
+            document.getElementById('usdRate').value = "26,300";
+            document.getElementById('transCost').value = "8,500,000";
+            document.getElementById('commission').value = "2,000";
+
+            for(let i=1; i<=3; i++) {
+                document.getElementById(`size-${i}`).value = "3x6";
+                document.getElementById(`thick-${i}`).value = "18";
+                document.getElementById(`bundles-${i}`).value = "10";
+                document.getElementById(`pcs-${i}`).value = "50";
+                document.getElementById(`ddu-${i}`).value = "15.50";
+            }
+            toggleProducts();
+        }
+
+        function copySummary() {
+            const text = `Plywood Import Cost\n\nTotal Sheets: ${globalSummary.sheets}\nCBM: ${globalSummary.cbm}\n\nTotal Cost:\n${globalSummary.totalCost}\n\nCost/Sheet:\n${globalSummary.costPerSheet}`;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Đã copy summary vào bộ nhớ tạm!");
+            }).catch(err => {
+                alert("Lỗi sao chép dữ liệu.");
+            });
+        }
+
+        // Initialize App
+        window.onload = () => {
+            loadFromLocalStorage();
+        };
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
+        }
+    </script>
+</body>
+</html>

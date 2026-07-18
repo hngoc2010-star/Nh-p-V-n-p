@@ -39,62 +39,51 @@
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
         }
 
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 0;
-            padding-bottom: env(safe-area-inset-bottom, 20px);
+            display: flex;
+            flex-direction: column;
+            padding-top: calc(var(--safe-area-top) + 5px);
+            padding-bottom: env(safe-area-inset-bottom, 10px);
         }
 
-        /* Sticky Header */
         header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            padding: 4px 12px;
             background-color: var(--bg-color);
-            border-bottom: 1px solid transparent;
-            transition: all 0.2s ease-in-out;
-            padding-top: calc(var(--safe-area-top) + 10px);
-            padding-bottom: 10px;
-        }
-
-        header.scrolled {
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 16px;
         }
 
         header h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 19px;
             font-weight: 700;
-            transition: font-size 0.2s;
-        }
-
-        header.scrolled h1 {
-            font-size: 18px;
         }
 
         .header-btns {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
 
         .btn-ios {
             background-color: var(--accent-color);
             color: white;
             border: none;
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
         }
@@ -104,27 +93,28 @@
             color: var(--accent-color);
         }
 
-        /* Container */
-        .container {
-            padding: 0 16px;
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 12px;
+            -webkit-overflow-scrolling: touch;
         }
 
-        /* Segmented Control */
         .segmented-control {
             display: flex;
             background-color: var(--border-color);
             padding: 2px;
-            border-radius: 9px;
-            margin: 12px 0;
+            border-radius: 8px;
+            margin: 6px 0;
         }
 
         .segmented-control label {
             flex: 1;
             text-align: center;
-            padding: 6px 0;
-            font-size: 13px;
+            padding: 4px 0;
+            font-size: 12px;
             font-weight: 500;
-            border-radius: 7px;
+            border-radius: 6px;
             cursor: pointer;
         }
 
@@ -134,33 +124,31 @@
 
         .segmented-control input:checked + label {
             background-color: var(--card-bg);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
             font-weight: 600;
         }
 
-        /* Card iOS Style */
         .card {
             background-color: var(--card-bg);
-            border-radius: 18px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border-radius: 14px;
+            padding: 10px 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
         }
 
         .card-title {
-            font-size: 17px;
+            font-size: 14px;
             font-weight: 600;
             margin-top: 0;
-            margin-bottom: 12px;
+            margin-bottom: 6px;
             color: var(--accent-color);
         }
 
-        /* Form Row */
         .form-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
+            padding: 6px 0;
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -169,7 +157,7 @@
         }
 
         .form-row label {
-            font-size: 15px;
+            font-size: 13.5px;
             font-weight: 500;
         }
 
@@ -177,7 +165,7 @@
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            width: 50%;
+            width: 55%;
         }
 
         select, input.num-input {
@@ -185,9 +173,9 @@
             text-align: right;
             border: none;
             background: transparent;
-            font-size: 16px;
+            font-size: 14.5px;
             color: var(--text-color);
-            padding: 4px 0;
+            padding: 2px 0;
             outline: none;
         }
 
@@ -198,26 +186,25 @@
 
         .error-msg {
             color: var(--danger-color);
-            font-size: 11px;
-            margin-top: 2px;
+            font-size: 10px;
+            margin-top: 1px;
             display: none;
             text-align: right;
         }
 
-        /* Output Row */
         .out-row {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
-            font-size: 15px;
+            padding: 5px 0;
+            font-size: 13.5px;
         }
 
         .out-row.total {
             border-top: 1px solid var(--border-color);
-            margin-top: 8px;
-            padding-top: 12px;
+            margin-top: 6px;
+            padding-top: 8px;
             font-weight: 700;
-            font-size: 18px;
+            font-size: 16px;
         }
         
         .out-row.total-sheet {
@@ -232,9 +219,9 @@
 </head>
 <body>
 
-    <header id="appHeader">
+    <header>
         <div class="header-content">
-            <h1 id="appTitle">Plywood Import</h1>
+            <h1>Plywood Import</h1>
             <div class="header-btns">
                 <button class="btn-ios secondary" onclick="resetForm()">Reset</button>
                 <button class="btn-ios" onclick="copySummary()">Copy</button>
@@ -242,23 +229,18 @@
         </div>
     </header>
 
-    <div class="container">
-        <!-- Number of Products -->
+    <div class="main-content">
         <div class="segmented-control">
             <input type="radio" name="numProd" id="p1" value="1" checked onclick="toggleProducts()">
-            <label for="p1">①</label>
+            <label for="p1">① Product</label>
             <input type="radio" name="numProd" id="p2" value="2" onclick="toggleProducts()">
-            <label for="p2">②</label>
+            <label for="p2">② Products</label>
             <input type="radio" name="numProd" id="p3" value="3" onclick="toggleProducts()">
-            <label for="p3">③</label>
+            <label for="p3">③ Products</label>
         </div>
 
-        <!-- Dynamic Products Container -->
-        <div id="productsContainer">
-            <!-- Product Cards will be handled by JavaScript loop -->
-        </div>
+        <div id="productsContainer"></div>
 
-        <!-- General Costs Card -->
         <div class="card">
             <div class="card-title">Chi Phí Chung</div>
             
@@ -275,37 +257,37 @@
             <div class="form-row">
                 <label>VAT</label>
                 <div class="input-wrapper">
-                    <span style="font-size: 16px; font-weight: 500;">8%</span>
+                    <span style="font-size: 14.5px; font-weight: 500;">8%</span>
                 </div>
             </div>
 
             <div class="form-row">
                 <label>USD Rate (VND)</label>
                 <div class="input-wrapper">
-                    <input type="text" id="usdRate" class="num-input" inputmode="numeric" value="26,300" oninput="handleNumericInput(this)">
-                    <div class="error-msg" id="err-usdRate">Không được để trống</div>
+                    <!-- Gỡ bỏ hoàn toàn inputmode để dùng bàn phím thường -->
+                    <input type="text" id="usdRate" class="num-input" value="26,300" oninput="handleNumericInput(this)">
+                    <div class="error-msg" id="err-usdRate">Bắt buộc</div>
                 </div>
             </div>
 
             <div class="form-row">
                 <label>Transportation (VND)</label>
                 <div class="input-wrapper">
-                    <input type="text" id="transCost" class="num-input" inputmode="numeric" value="8,500,000" oninput="handleNumericInput(this)">
-                    <div class="error-msg" id="err-transCost">Không được để trống</div>
+                    <input type="text" id="transCost" class="num-input" value="8,500,000" oninput="handleNumericInput(this)">
+                    <div class="error-msg" id="err-transCost">Bắt buộc</div>
                 </div>
             </div>
 
             <div class="form-row">
-                <label>Commission (USD)</label>
+                <label>Commission (VND/Sheet)</label>
                 <div class="input-wrapper">
-                    <input type="text" id="commission" class="num-input" inputmode="numeric" value="2,000" oninput="handleNumericInput(this)">
-                    <div class="error-msg" id="err-commission">Không được để trống</div>
+                    <input type="text" id="commission" class="num-input" value="2,000" oninput="handleNumericInput(this)">
+                    <div class="error-msg" id="err-commission">Bắt buộc</div>
                 </div>
             </div>
         </div>
 
-        <!-- Output Card -->
-        <div class="card" style="margin-bottom: 32px;">
+        <div class="card">
             <div class="card-title">Kết Quả</div>
             <div class="out-row"><span>Total Sheets</span><span id="outTotalSheets" class="out-row total-sheet">0</span></div>
             <div class="out-row"><span>Total CBM</span><span id="outTotalCBM">0.00</span></div>
@@ -320,7 +302,6 @@
     </div>
 
     <script>
-        // Render 3 Product cards on load but hide dynamic cards based on control
         const container = document.getElementById('productsContainer');
         let html = '';
         for(let i=1; i<=3; i++) {
@@ -339,46 +320,35 @@
                 <div class="form-row">
                     <label>Thickness (mm)</label>
                     <div class="input-wrapper">
-                        <input type="text" id="thick-${i}" class="num-input" inputmode="decimal" value="18" oninput="handleNumericInput(this)">
-                        <div class="error-msg" id="err-thick-${i}">Phải lớn hơn 0</div>
+                        <input type="text" id="thick-${i}" class="num-input" value="18" oninput="handleNumericInput(this)">
+                        <div class="error-msg" id="err-thick-${i}">Phải > 0</div>
                     </div>
                 </div>
                 <div class="form-row">
                     <label>Bundles</label>
                     <div class="input-wrapper">
-                        <input type="text" id="bundles-${i}" class="num-input" inputmode="numeric" value="10" oninput="handleNumericInput(this)">
-                        <div class="error-msg" id="err-bundles-${i}">Phải lớn hơn 0</div>
+                        <input type="text" id="bundles-${i}" class="num-input" value="10" oninput="handleNumericInput(this)">
+                        <div class="error-msg" id="err-bundles-${i}">Phải > 0</div>
                     </div>
                 </div>
                 <div class="form-row">
                     <label>PCS / Bundle</label>
                     <div class="input-wrapper">
-                        <input type="text" id="pcs-${i}" class="num-input" inputmode="numeric" value="50" oninput="handleNumericInput(this)">
-                        <div class="error-msg" id="err-pcs-${i}">Phải lớn hơn 0</div>
+                        <input type="text" id="pcs-${i}" class="num-input" value="50" oninput="handleNumericInput(this)">
+                        <div class="error-msg" id="err-pcs-${i}">Phải > 0</div>
                     </div>
                 </div>
                 <div class="form-row">
                     <label>DDU (USD/Sheet)</label>
                     <div class="input-wrapper">
-                        <input type="text" id="ddu-${i}" class="num-input" inputmode="decimal" value="15.50" oninput="handleNumericInput(this)">
-                        <div class="error-msg" id="err-ddu-${i}">Phải lớn hơn 0</div>
+                        <input type="text" id="ddu-${i}" class="num-input" value="15.50" oninput="handleNumericInput(this)">
+                        <div class="error-msg" id="err-ddu-${i}">Phải > 0</div>
                     </div>
                 </div>
             </div>`;
         }
         container.innerHTML = html;
 
-        // Sticky Header scroll effect
-        window.addEventListener('scroll', () => {
-            const header = document.getElementById('appHeader');
-            if (window.scrollY > 20) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-
-        // Format number to string with commas
         function formatNumber(num) {
             if(isNaN(num)) return "0";
             let parts = num.toString().split(".");
@@ -386,33 +356,30 @@
             return parts.join(".");
         }
 
-        // Parse formatted string back to float
         function parseNumber(str) {
             return parseFloat(str.replace(/,/g, '')) || 0;
         }
 
-        // Handle auto-format and realtime validation on input
         function handleNumericInput(input) {
-            let id = input.id;
-            let val = input.value.replace(/,/g, '');
+            // Loại bỏ các ký tự không hợp lệ trừ số và dấu chấm
+            let val = input.value.replace(/[^0-9.]/g, '');
             
-            // Allow decimals for DDU and Thickness
-            if (id.includes('ddu') || id.includes('thick')) {
-                if(val.endsWith('.')) return; // Let user type decimal point
-                let parsed = parseFloat(val);
-                if(!isNaN(parsed)) {
-                    input.value = formatNumber(val);
-                } else {
-                    input.value = val;
-                }
+            // Xử lý trường hợp có nhiều hơn 1 dấu chấm thập phân
+            let dots = val.split('.');
+            if (dots.length > 2) {
+                val = dots[0] + '.' + dots.slice(1).join('');
+            }
+
+            if (val.endsWith('.')) {
+                input.value = val;
+                return; 
+            }
+            
+            let parsed = parseFloat(val);
+            if(!isNaN(parsed)) {
+                input.value = formatNumber(val);
             } else {
-                // Integer numbers
-                val = val.replace(/\D/g, '');
-                if(val !== '') {
-                    input.value = formatNumber(parseInt(val, 10));
-                } else {
-                    input.value = '';
-                }
+                input.value = val;
             }
             validateAndCalculate();
         }
@@ -430,14 +397,12 @@
             validateAndCalculate();
         }
 
-        // Global results variables for easy copying
         let globalSummary = {};
 
         function validateAndCalculate() {
             let hasError = false;
             const activeCount = parseInt(document.querySelector('input[name="numProd"]:checked').value);
             
-            // Check Common Cost
             ['usdRate', 'transCost', 'commission'].forEach(id => {
                 const input = document.getElementById(id);
                 const err = document.getElementById(`err-${id}`);
@@ -449,7 +414,6 @@
                 }
             });
 
-            // Check Active Products
             for(let i=1; i<=activeCount; i++) {
                 ['thick', 'bundles', 'pcs', 'ddu'].forEach(field => {
                     const input = document.getElementById(`${field}-${i}`);
@@ -474,21 +438,20 @@
             let totalCBM = 0;
             let totalDDUUSD = 0;
 
-            // Get General Costs
             const taxRate = parseNumber(document.getElementById('importTax').value) / 100;
             const vatRate = 0.08;
             const usdRate = parseNumber(document.getElementById('usdRate').value);
             const transCostVND = parseNumber(document.getElementById('transCost').value);
-            const commUSD = parseNumber(document.getElementById('commission').value);
+            const commVNDPerSheet = parseNumber(document.getElementById('commission').value);
 
             for(let i=1; i<=activeCount; i++) {
                 const size = document.getElementById(`size-${i}`).value;
-                const thick = parseNumber(document.getElementById(`thick-${i}`).value) / 1000; // mm to meter
+                const thick = parseNumber(document.getElementById(`thick-${i}`).value) / 1000;
                 const bundles = parseNumber(document.getElementById(`bundles-${i}`).value);
                 const pcs = parseNumber(document.getElementById(`pcs-${i}`).value);
                 const dduSheet = parseNumber(document.getElementById(`ddu-${i}`).value);
 
-                let w = 0.91, l = 1.82; // Default 3x6
+                let w = 0.91, l = 1.82;
                 if(size === '4x8') { w = 1.22; l = 2.44; }
 
                 const sheets = bundles * pcs;
@@ -500,27 +463,24 @@
                 totalDDUUSD += dduVal;
             }
 
-            // Convert and Calculate Costs
             const dduVND = totalDDUUSD * usdRate;
             const taxVND = dduVND * taxRate;
             const vatVND = (dduVND + taxVND) * vatRate;
-            const commVND = commUSD * usdRate;
+            const totalCommVND = totalSheets * commVNDPerSheet;
             
-            const totalCostVND = dduVND + taxVND + vatVND + transCostVND + commVND;
+            const totalCostVND = dduVND + taxVND + vatVND + transCostVND + totalCommVND;
             const costPerSheetVND = totalSheets > 0 ? (totalCostVND / totalSheets) : 0;
 
-            // Update UI
             document.getElementById('outTotalSheets').innerText = formatNumber(totalSheets);
             document.getElementById('outTotalCBM').innerText = totalCBM.toFixed(2);
             document.getElementById('outDDUUSD').innerText = '$' + formatNumber(totalDDUUSD.toFixed(2));
             document.getElementById('outTaxVND').innerText = formatNumber(Math.round(taxVND));
             document.getElementById('outVatVND').innerText = formatNumber(Math.round(vatVND));
             document.getElementById('outTransVND').innerText = formatNumber(transCostVND);
-            document.getElementById('outCommVND').innerText = formatNumber(Math.round(commVND));
+            document.getElementById('outCommVND').innerText = formatNumber(Math.round(totalCommVND));
             document.getElementById('outTotalCost').innerText = formatNumber(Math.round(totalCostVND)) + " VND";
             document.getElementById('outCostPerSheet').innerText = formatNumber(Math.round(costPerSheetVND)) + " VND";
 
-            // Save data to global for copy function
             globalSummary = {
                 sheets: formatNumber(totalSheets),
                 cbm: totalCBM.toFixed(2),
@@ -608,12 +568,10 @@
             });
         }
 
-        // Initialize App
         window.onload = () => {
             loadFromLocalStorage();
         };
 
-        // Service Worker Registration
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
         }
